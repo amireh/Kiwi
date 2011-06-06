@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KiwiUI</class>
- <widget class="QMainWindow" name="KiwiUI">
+ <class>KiwiUi</class>
+ <widget class="QMainWindow" name="KiwiUi">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -170,7 +170,7 @@ p, li { white-space: pre-wrap; }
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>&amp;Rename files</string>
+                 <string>&amp;Rename a file</string>
                 </property>
                </widget>
               </item>
@@ -183,7 +183,7 @@ p, li { white-space: pre-wrap; }
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>&amp;Delete files</string>
+                 <string>&amp;Delete file(s)</string>
                 </property>
                </widget>
               </item>
@@ -196,7 +196,7 @@ p, li { white-space: pre-wrap; }
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>&amp;Create files</string>
+                 <string>&amp;Create file(s)</string>
                 </property>
                </widget>
               </item>
@@ -373,7 +373,7 @@ p, li { white-space: pre-wrap; }
               <bool>false</bool>
              </property>
              <property name="headerHidden">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <attribute name="headerVisible">
               <bool>false</bool>
@@ -386,6 +386,9 @@ p, li { white-space: pre-wrap; }
              </attribute>
              <attribute name="headerHighlightSections">
               <bool>false</bool>
+             </attribute>
+             <attribute name="headerMinimumSectionSize">
+              <number>30</number>
              </attribute>
              <column>
               <property name="text">
@@ -418,59 +421,6 @@ p, li { white-space: pre-wrap; }
                <string>Checksum</string>
               </property>
              </column>
-             <item>
-              <property name="text">
-               <string>R</string>
-              </property>
-              <property name="text">
-               <string>test/rename_test.txt</string>
-              </property>
-              <property name="text">
-               <string>test/renamed.txt</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>M</string>
-              </property>
-              <property name="text">
-               <string>test/diff_test.txt</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="text">
-               <string>test/diff_test.diff</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>D</string>
-              </property>
-              <property name="text">
-               <string>test/delete_test.txt</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>C</string>
-              </property>
-              <property name="textAlignment">
-               <set>AlignLeft|AlignVCenter</set>
-              </property>
-              <property name="text">
-               <string>test/create_test.txt</string>
-              </property>
-              <property name="text">
-               <string>repository/1.0.1/test-create_test.txt</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </item>
             </widget>
            </item>
            <item row="0" column="0">
@@ -987,7 +937,7 @@ p, li { white-space: pre-wrap; }
   <connection>
    <sender>action_Quit</sender>
    <signal>activated()</signal>
-   <receiver>KiwiUI</receiver>
+   <receiver>KiwiUi</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">

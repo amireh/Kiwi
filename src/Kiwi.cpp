@@ -34,6 +34,7 @@ namespace Pixy
 
 	Kiwi::~Kiwi() {
 
+    delete mRepo;
     delete Patcher::getSingletonPtr();
 
 		mLog->infoStream() << "++++++ " << PIXY_APP_NAME << " cleaned up successfully ++++++";
@@ -53,22 +54,6 @@ namespace Pixy
 
 	Kiwi& Kiwi::getSingleton() {
 		return *getSingletonPtr();
-	}
-
-	void Kiwi::go(int argc, char** argv) {
-
-		// init logger
-		initLogger();
-
-		Patcher::getSingletonPtr();
-
-    mApp = new QApplication(argc, argv);
-    mApp->setOrganizationName("Kiwi");
-    mApp->setApplicationName("Kiwi");
-
-    this->setupWidgets();
-
-    mApp->exec();
 	}
 
 	void Kiwi::initLogger() {
@@ -117,6 +102,23 @@ namespace Pixy
 		mLog = new log4cpp::FixedContextCategory(PIXY_LOG_CATEGORY, "Kiwi");
 	}
 
+	void Kiwi::go(int argc, char** argv) {
+
+		// init logger
+		initLogger();
+
+		Patcher::getSingletonPtr();
+    mRepo = new Repository(Version(0,0,0));
+
+    mApp = new QApplication(argc, argv);
+    mApp->setOrganizationName("Kiwi");
+    mApp->setApplicationName("Kiwi");
+
+    this->setupWidgets();
+
+    mApp->exec();
+	}
+
 	void Kiwi::setupWidgets() {
 
     mWindow = new QMainWindow();
@@ -135,8 +137,13 @@ namespace Pixy
     connect(mUi.actionAbout, SIGNAL(activated()), this, SLOT(evtShowAboutDialog()));
 
     // General tab
+    connect(mUi.btnChangeRoot, SIGNAL(released()), this, SLOT(evtClickChangeRoot()));
 
     // Edit tab
+    connect(mUi.btnCreate, SIGNAL(released()), this, SLOT(evtClickCreate()));
+    connect(mUi.btnModify, SIGNAL(released()), this, SLOT(evtClickModify()));
+    connect(mUi.btnRename, SIGNAL(released()), this, SLOT(evtClickRename()));
+    connect(mUi.btnDelete, SIGNAL(released()), this, SLOT(evtClickDelete()));
 
     // Commit tab
 
@@ -144,8 +151,166 @@ namespace Pixy
 
   };
 
+  void Kiwi::refreshTree() {
+    mUi.treeRepo->setHeaderHidden(false);
+  }
+
   void Kiwi::evtShowAboutDialog() {
     mDlgAbout->exec();
   }
+
+  void Kiwi::evtClickChangeRoot() {
+
+    QString dir =
+      QFileDialog::getExistingDirectory(
+        mUi.centralwidget, tr("Choose Application Root"),
+        "",
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    mRepo->setRoot(dir.toStdString());
+
+    mUi.txtRoot->setText(dir);
+  }
+
+  void Kiwi::evtClickCreate() {
+    QFileDialog dialog(mUi.centralwidget);
+    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setViewMode(QFileDialog::Detail);
+    if (mRepo->isRootSet())
+      dialog.setDirectory(QString::fromStdString(mRepo->getRoot()));
+
+    QStringList fileNames;
+    if (dialog.exec())
+      fileNames = dialog.selectedFiles();
+    else
+      return;
+
+    MD5 md5;
+    QString lLocal;
+    QString lFull;
+    QString tmp = QString::fromStdString(mRepo->getRoot());
+    for (int i=0; i < fileNames.size(); ++i) {
+
+      lFull = fileNames.at(i);
+      lLocal = QString(fileNames.at(i)).remove(tmp);
+
+      std::string lFilename = lLocal.toStdString();
+      std::string lChecksum = md5.digestFile((char*)(lFull.toStdString()).c_str());
+
+      // only add it if it hasn't been added yet
+      if (!mRepo->registerEntry(CREATE, lFilename, "", "", lChecksum))
+        continue;
+
+      QTreeWidgetItem* lItem = new QTreeWidgetItem();
+      lItem->setData(0, Qt::DisplayRole, tr("C"));
+      lItem->setData(1, Qt::DisplayRole, lLocal);
+      lItem->setData(4, Qt::DisplayRole, QString(lChecksum.c_str()));
+      mUi.treeRepo->addTopLevelItem(lItem);
+      lItem = 0;
+    }
+    this->refreshTree();
+  }
+
+  void Kiwi::evtClickModify() {
+    QString lSrc, lDiff;
+    QFileDialog dialog(mUi.centralwidget);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setViewMode(QFileDialog::Detail);
+    if (mRepo->isRootSet())
+      dialog.setDirectory(QString::fromStdString(mRepo->getRoot()));
+
+    if (dialog.exec())
+      lSrc = dialog.selectedFiles().at(0);
+    else
+      return;
+
+    if (dialog.exec())
+      lDiff = dialog.selectedFiles().at(0);
+    else
+      return;
+
+    MD5 md5;
+    std::string lChecksum = md5.digestFile((char*)((lDiff.toStdString()).c_str()));
+
+    if (!mRepo->registerEntry(MODIFY, lSrc.toStdString(), lDiff.toStdString(), "", lChecksum))
+      return;
+
+    QTreeWidgetItem* lItem = new QTreeWidgetItem();
+    lItem->setData(0, Qt::DisplayRole, tr("M"));
+    lItem->setData(1, Qt::DisplayRole, lSrc);
+    lItem->setData(2, Qt::DisplayRole, lDiff);
+    lItem->setData(4, Qt::DisplayRole, QString(lChecksum.c_str()));
+    mUi.treeRepo->addTopLevelItem(lItem);
+    lItem = 0;
+
+    this->refreshTree();
+  }
+
+  void Kiwi::evtClickRename() {
+    QString lSrc, lDest;
+    QFileDialog dialog(mUi.centralwidget);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setViewMode(QFileDialog::Detail);
+    if (mRepo->isRootSet())
+      dialog.setDirectory(QString::fromStdString(mRepo->getRoot()));
+
+    if (dialog.exec())
+      lSrc = dialog.selectedFiles().at(0);
+    else
+      return;
+
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    if (dialog.exec())
+      lDest = dialog.selectedFiles().at(0);
+    else
+      return;
+
+    MD5 md5;
+    std::string lChecksum = md5.digestFile((char*)((lSrc.toStdString()).c_str()));
+
+    if (!mRepo->registerEntry(RENAME, lSrc.toStdString(), lDest.toStdString(), "", lChecksum))
+      return;
+
+    QTreeWidgetItem* lItem = new QTreeWidgetItem();
+    lItem->setData(0, Qt::DisplayRole, tr("R"));
+    lItem->setData(1, Qt::DisplayRole, lSrc);
+    lItem->setData(2, Qt::DisplayRole, lDest);
+    lItem->setData(4, Qt::DisplayRole, QString(lChecksum.c_str()));
+    mUi.treeRepo->addTopLevelItem(lItem);
+    lItem = 0;
+
+    this->refreshTree();
+  }
+
+  void Kiwi::evtClickDelete() {
+    QFileDialog dialog(mUi.centralwidget);
+    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setViewMode(QFileDialog::Detail);
+    if (mRepo->isRootSet())
+      dialog.setDirectory(QString::fromStdString(mRepo->getRoot()));
+
+    QStringList fileNames;
+    if (dialog.exec())
+      fileNames = dialog.selectedFiles();
+    else
+      return;
+
+    for (int i=0; i < fileNames.size(); ++i) {
+      std::string lFilename = fileNames.at(i).toStdString();
+
+      // only add it if it hasn't been added yet
+      if (!mRepo->registerEntry(DELETE, lFilename))
+        continue;
+
+      QTreeWidgetItem* lItem = new QTreeWidgetItem();
+      lItem->setData(0, Qt::DisplayRole, tr("D"));
+      lItem->setData(1, Qt::DisplayRole, fileNames.at(i));
+      mUi.treeRepo->addTopLevelItem(lItem);
+      lItem = 0;
+    }
+    this->refreshTree();
+  }
+
+
 
 } // end of namespace Pixy

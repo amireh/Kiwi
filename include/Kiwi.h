@@ -31,6 +31,7 @@
 #include <map>
 #include "Pixy.h"
 #include "Patcher.h"
+#include "md5.hpp"
 
 // Qt stuff
 #include <QObject>
@@ -60,27 +61,32 @@ namespace Pixy
 		static Kiwi& getSingleton();
 
 		/*! \brief
-		 *	Starts up the components: InputManager, Renderer, Patcher and Downloader,
-		 *  fires Patcher::validate() in a thread, and begins the application loop.
-		 *
-		 *  \arg inRendererName specify which Renderer you'd like to use, if empty
-		 *  the "vanilla" renderer is used: stdout
+		 *	Starts up Qt, connects widgets, and begins the event loop.
 		 */
 		void go(int argc, char** argv);
 
   public slots:
     void evtShowAboutDialog();
+    void evtClickChangeRoot();
+    void evtClickCreate();
+    void evtClickModify();
+    void evtClickRename();
+    void evtClickDelete();
 
   protected:
     void setupWidgets();
     void bindWidgets();
 
-    Ui::KiwiUI mUi;
+    Ui::KiwiUi mUi;
     Ui::KiwiAbout mDlgAboutUi;
 
 		QApplication* mApp;
 		QMainWindow *mWindow;
     QDialog *mDlgAbout;
+
+    Repository *mRepo;
+
+    void refreshTree();
 
 	private:
 		Kiwi();
