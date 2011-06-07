@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="Icons">
+    <file alias="Update">software-update-available.svg</file>
+    <file alias="Package">package-x-generic.svg</file>
+    <file alias="SaveAs">document-save-as.svg</file>
+    <file alias="Save">document-save.svg</file>
+    <file alias="New">document-new.svg</file>
+    <file alias="Open">document-open.svg</file>
+    <file alias="Remove">list-remove.svg</file>
+    <file alias="Add">list-add.svg</file>
+    <file alias="Refresh">view-refresh.svg</file>
+    <file alias="FolderOpen">folder-open.svg</file>
+    <file alias="Quit">process-stop.svg</file>
+  </qresource>
+</RCC>

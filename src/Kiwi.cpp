@@ -95,6 +95,11 @@ namespace Pixy
     connect(mUi.btnModify, SIGNAL(released()), this, SLOT(evtClickModify()));
     connect(mUi.btnRename, SIGNAL(released()), this, SLOT(evtClickRename()));
     connect(mUi.btnDelete, SIGNAL(released()), this, SLOT(evtClickDelete()));
+    connect(mUi.btnRemoveC, SIGNAL(released()), this, SLOT(evtClickRemoveC()));
+    connect(mUi.btnRemoveM, SIGNAL(released()), this, SLOT(evtClickRemoveM()));
+    connect(mUi.btnRemoveR, SIGNAL(released()), this, SLOT(evtClickRemoveR()));
+    connect(mUi.btnRemoveD, SIGNAL(released()), this, SLOT(evtClickRemoveD()));
+
 
     // Commit tab
     connect(mUi.btnGenerateScript, SIGNAL(released()), this, SLOT(evtClickGenerateScript()));
@@ -190,23 +195,30 @@ namespace Pixy
     mDlgAbout->exec();
   }
 
-  void Kiwi::evtClickUpdateRoot() {
-    mRepo->setRoot(mUi.txtRoot->text().toStdString());
-    mRepo->refreshPaths();
+  void Kiwi::setRoot(const QString& inRoot) {
+    mRepo->setRoot(inRoot.toStdString());
+
+    mUi.txtRoot->setText(inRoot);
     mUi.tabEdit->setEnabled(true);
+
+    mUi.txtRoot->setEnabled(false);
+    mUi.btnUpdateRoot->setEnabled(false);
+    mUi.btnChangeRoot->setEnabled(false);
+  };
+
+  void Kiwi::evtClickUpdateRoot() {
+    this->setRoot(mUi.txtRoot->text());
   }
   void Kiwi::evtClickChangeRoot() {
 
-    QString dir =
-      QFileDialog::getExistingDirectory(
-        mUi.centralwidget, tr("Choose Application Root"),
-        "",
-        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    mRepo->setRoot(dir.toStdString());
-    mRepo->refreshPaths();
+  QString dir =
+    QFileDialog::getExistingDirectory(
+      mUi.centralwidget,
+      tr("Choose Application Root"),
+      "",
+      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-    mUi.txtRoot->setText(dir);
-    mUi.tabEdit->setEnabled(true);
+    this->setRoot(dir);
   }
 
   bool Kiwi::validateEntry(const QString& inPath) {
@@ -475,6 +487,7 @@ namespace Pixy
         tr("You need to add entries to the repository before attempting to generate a patch script. Please go to the Edit tab."));
       return;
     }
+
     mRepo->setVersion(
       Version(
         mUi.spinVersionMajor->value(),
@@ -482,6 +495,14 @@ namespace Pixy
         mUi.spinVersionBuild->value()
       )
     );
+
+    if (mRepo->getVersion().toNumber() == "0.0.0") {
+      QMessageBox::information(
+        mWindow,
+        tr("Repository version is missing!"),
+        tr("You need to specify the version of this repository in the Edit tab."));
+      return;
+    };
 
     std::ofstream of;
     std::string ofp = mRepo->getRoot() + "/patch.txt";
@@ -593,5 +614,18 @@ namespace Pixy
 
     mUi.txtConsole->append(tr("Archive compressed successfully."));
   }
+
+  void Kiwi::evtClickRemoveC() {
+    mRepo->removeEntry(mUi.treeCreations->currentItem());
+    mUi.treeCreations->takeTopLevelItem(
+      mUi.treeCreations->indexOfTopLevelItem(
+        mUi.treeCreations->currentItem()));
+  };
+  void Kiwi::evtClickRemoveM() {
+  };
+  void Kiwi::evtClickRemoveR() {
+  };
+  void Kiwi::evtClickRemoveD() {
+  };
 
 } // end of namespace Pixy

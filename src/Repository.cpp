@@ -107,11 +107,20 @@ namespace Pixy {
     return mVersion;
   }
 
-  void Repository::refreshPaths() {
-
-  }
-
   void Repository::setVersion(const Version inV) {
     mVersion = inV;
   }
+
+  void Repository::removeEntry(QTreeWidgetItem* inWidget) {
+    // make sure the entry doesn't exist yet
+    std::vector<PatchEntry*>::iterator _itr;
+    for (_itr = mEntries.begin(); _itr != mEntries.end(); ++_itr)
+      if ((*_itr)->Widget == inWidget) {
+        PatchEntry* lEntry = *_itr;
+        mEntries.erase(_itr);
+        delete lEntry;
+        lEntry = 0;
+        break;
+      }
+  };
 };

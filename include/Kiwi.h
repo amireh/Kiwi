@@ -93,9 +93,16 @@ namespace Pixy
     void evtClickGenerateScript();
     void evtClickGenerateTarball();
 
+    void evtClickRemoveC();
+    void evtClickRemoveM();
+    void evtClickRemoveR();
+    void evtClickRemoveD();
+
   protected:
     void setupWidgets();
     void bindWidgets();
+
+    void setRoot(const QString& inStr);
 
     bool validateEntry(const QString& inPath);
 

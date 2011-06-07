@@ -33,6 +33,7 @@
 #include <iostream>
 #include <vector>
 
+class QTreeWidgetItem;
 using std::ostream;
 namespace Pixy {
 
@@ -147,6 +148,8 @@ class Repository {
                   std::string remote = "",
                   std::string temp = "",
                   std::string checksum = "");
+
+    void removeEntry(QTreeWidgetItem* inWidget);
 
 		/*! \brief
 		 *  Returns all the entries registered in this repository.

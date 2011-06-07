@@ -50,6 +50,7 @@ QT4_WRAP_UI(Kiwi_SRCS
   resources/kiwi.ui
   resources/kiwi_about.ui
 )
+QT4_ADD_RESOURCES(Kiwi_SRCS resources/media.qrc)
 QT4_WRAP_CPP(Kiwi_SRCS include/Kiwi.h)
 
 #CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/KiwiConfig.h.cmake ${CMAKE_SOURCE_DIR}/include/KiwiConfig.h )
