@@ -521,11 +521,6 @@ p, li { white-space: pre-wrap; }
                <string>Destination</string>
               </property>
              </column>
-             <column>
-              <property name="text">
-               <string>Checksum</string>
-              </property>
-             </column>
             </widget>
            </item>
            <item row="9" column="0" colspan="2">

@@ -552,9 +552,8 @@ namespace Pixy
       return;
     }
 
-    mUi.txtConsole->append(tr("Preparing tar archive."));
-
     std::string ofp = mRepo->getRoot() + "/patch.tar";
+    mUi.txtConsole->append(tr("Preparing tar archive.") + tr(ofp.c_str()));
     std::fstream out(ofp.c_str(), std::ios::out);
     if(!out.is_open())
     {
@@ -593,7 +592,7 @@ namespace Pixy
 
     int tarFD = open(ofp.c_str(), O_RDONLY);
 
-    std::string gofp = ofp + std::string(".gz");
+    std::string gofp = mRepo->getRoot() + std::string("/patch_") + mRepo->getVersion().toNumber() + std::string(".tar.bz2");
     FILE *tbz2File = fopen(gofp.c_str(), "wb");
     int bzError;
     const int BLOCK_MULTIPLIER = 7;
@@ -612,6 +611,8 @@ namespace Pixy
 
     delete[] buf;
 
+    fclose(tbz2File);
+
     mUi.txtConsole->append(tr("Archive compressed successfully."));
   }
 
@@ -622,10 +623,22 @@ namespace Pixy
         mUi.treeCreations->currentItem()));
   };
   void Kiwi::evtClickRemoveM() {
+    mRepo->removeEntry(mUi.treeMods->currentItem());
+    mUi.treeMods->takeTopLevelItem(
+      mUi.treeMods->indexOfTopLevelItem(
+        mUi.treeMods->currentItem()));
   };
   void Kiwi::evtClickRemoveR() {
+    mRepo->removeEntry(mUi.treeRenames->currentItem());
+    mUi.treeRenames->takeTopLevelItem(
+      mUi.treeRenames->indexOfTopLevelItem(
+        mUi.treeRenames->currentItem()));
   };
   void Kiwi::evtClickRemoveD() {
+    mRepo->removeEntry(mUi.treeDeletions->currentItem());
+    mUi.treeDeletions->takeTopLevelItem(
+      mUi.treeDeletions->indexOfTopLevelItem(
+        mUi.treeDeletions->currentItem()));
   };
 
 } // end of namespace Pixy
