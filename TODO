@@ -1,1 +1,9 @@
-
+* verify file existence before:
+  # generating MD5 checksum in Tools
+  # generating binary diff in Tools
+* remove log4cpp dependency (done)
+* don't allow any operations on files that are outside the project root
+* implement the repo file structure preferences (done)
+* create patch tarballs (done)
+* delete entries
+* save/open sheets

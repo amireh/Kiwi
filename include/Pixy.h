@@ -26,18 +26,10 @@
 
 #include <exception>
 #include <stdint.h>
-#include "log4cpp/Category.hh"
-#include "log4cpp/FixedContextCategory.hh"
-#include "log4cpp/FileAppender.hh"
-#include "PixyLogLayout.h"
 #include "PixyExceptions.h"
 
-/* Application specific definitions */
-#define PIXY_APP_VERSION "VERSION 0.1.0" // used in log
-#define PIXY_APP_NAME "Kiwi" // used in RenderWindow title
-#define PIXY_LOG_CATEGORY "Karazeh" // used in log4cpp
+#define PIXY_APP_VERSION "VERSION 1.0.0" // used in log
 #define PIXY_RESOURCE_PATH "Karazeh.dat"
-//#define PIXY_PERSISTENT
 
 /* Finds the current platform
  * Note: proudly stolen from Ogre3D code in OgrePlatform.h */
@@ -71,17 +63,14 @@
  */
 #if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
 #define PROJECT_ROOT "..\\"
-#define PROJECT_LOG_DIR "..\\log"
 #define PROJECT_RESOURCES "\\resources"
 #define PROJECT_TEMP_DIR "..\\tmp\\"
 #elif PIXY_PLATFORM == PIXY_PLATFORM_APPLE
 #define PROJECT_ROOT "../"
 #define PROJECT_RESOURCES "/Resources"
-#define PROJECT_LOG_DIR "/Resources/log"
 #define PROJECT_TEMP_DIR "/Resources/tmp/"
 #else
 #define PROJECT_ROOT "../"
-#define PROJECT_LOG_DIR "../log"
 #define PROJECT_RESOURCES "/resources"
 #define PROJECT_TEMP_DIR "../tmp/"
 #endif

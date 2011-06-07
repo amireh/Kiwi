@@ -3,7 +3,7 @@
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted providing that the following conditions 
+ * modification, are permitted providing that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
@@ -193,7 +193,7 @@ static void offtout(off_t x,u_char *buf)
 	if(x<0) buf[7]|=0x80;
 }
 
-int diff(int argc,char *argv[])
+int bsdiff(const char* inold, const char* innew, const char* indest)
 {
 	int fd;
 	u_char *old,*new;
@@ -213,16 +213,14 @@ int diff(int argc,char *argv[])
 	BZFILE * pfbz2;
 	int bz2err;
 
-	if(argc!=4) errx(1,"usage: %s oldfile newfile patchfile\n",argv[0]);
-
 	/* Allocate oldsize+1 bytes instead of oldsize bytes to ensure
 		that we never try to malloc(0) and get a NULL pointer */
-	if(((fd=open(argv[1],O_RDONLY,0))<0) ||
+	if(((fd=open(inold,O_RDONLY,0))<0) ||
 		((oldsize=lseek(fd,0,SEEK_END))==-1) ||
 		((old=malloc(oldsize+1))==NULL) ||
 		(lseek(fd,0,SEEK_SET)!=0) ||
 		(read(fd,old,oldsize)!=oldsize) ||
-		(close(fd)==-1)) err(1,"%s",argv[1]);
+		(close(fd)==-1)) err(1,"%s",inold);
 
 	if(((I=malloc((oldsize+1)*sizeof(off_t)))==NULL) ||
 		((V=malloc((oldsize+1)*sizeof(off_t)))==NULL)) err(1,NULL);
@@ -233,12 +231,12 @@ int diff(int argc,char *argv[])
 
 	/* Allocate newsize+1 bytes instead of newsize bytes to ensure
 		that we never try to malloc(0) and get a NULL pointer */
-	if(((fd=open(argv[2],O_RDONLY,0))<0) ||
+	if(((fd=open(innew,O_RDONLY,0))<0) ||
 		((newsize=lseek(fd,0,SEEK_END))==-1) ||
 		((new=malloc(newsize+1))==NULL) ||
 		(lseek(fd,0,SEEK_SET)!=0) ||
 		(read(fd,new,newsize)!=newsize) ||
-		(close(fd)==-1)) err(1,"%s",argv[2]);
+		(close(fd)==-1)) err(1,"%s",innew);
 
 	if(((db=malloc(newsize+1))==NULL) ||
 		((eb=malloc(newsize+1))==NULL)) err(1,NULL);
@@ -246,8 +244,8 @@ int diff(int argc,char *argv[])
 	eblen=0;
 
 	/* Create the patch file */
-	if ((pf = fopen(argv[3], "w")) == NULL)
-		err(1, "%s", argv[3]);
+	if ((pf = fopen(indest, "w")) == NULL)
+		err(1, "%s", indest);
 
 	/* Header is
 		0	8	 "BSDIFF40"
@@ -264,7 +262,7 @@ int diff(int argc,char *argv[])
 	offtout(0, header + 16);
 	offtout(newsize, header + 24);
 	if (fwrite(header, 32, 1, pf) != 1)
-		err(1, "fwrite(%s)", argv[3]);
+		err(1, "fwrite(%s)", indest);
 
 	/* Compute the differences, writing ctrl as we go */
 	if ((pfbz2 = BZ2_bzWriteOpen(&bz2err, pf, 9, 0, 0)) == NULL)
@@ -283,7 +281,7 @@ int diff(int argc,char *argv[])
 				(old[scsc+lastoffset] == new[scsc]))
 				oldscore++;
 
-			if(((len==oldscore) && (len!=0)) || 
+			if(((len==oldscore) && (len!=0)) ||
 				(len>oldscore+8)) break;
 
 			if((scan+lastoffset<oldsize) &&
@@ -389,7 +387,7 @@ int diff(int argc,char *argv[])
 	if (fseeko(pf, 0, SEEK_SET))
 		err(1, "fseeko");
 	if (fwrite(header, 32, 1, pf) != 1)
-		err(1, "fwrite(%s)", argv[3]);
+		err(1, "fwrite(%s)", indest);
 	if (fclose(pf))
 		err(1, "fclose");
 

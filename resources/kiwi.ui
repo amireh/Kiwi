@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
-    <height>670</height>
+    <width>704</width>
+    <height>672</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,12 +17,21 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
       <widget class="QWidget" name="tabGeneral">
        <attribute name="title">
-        <string>General</string>
+        <string>&amp;General</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
         <item row="0" column="0">
@@ -37,75 +46,162 @@
            <property name="topMargin">
             <number>9</number>
            </property>
-           <item row="0" column="0" colspan="2">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Application root:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QToolButton" name="btnChangeRoot">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLineEdit" name="txtRoot">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="placeholderText">
-              <string>/path/to/application</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hashing algorithm to use:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QRadioButton" name="radioButton">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="text">
-              <string>MD5</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="4" column="0">
-            <widget class="QRadioButton" name="radioButton_2">
-             <property name="enabled">
-              <bool>false</bool>
+            <widget class="QGroupBox" name="groupBox_4">
+             <property name="toolTip">
+              <string>Checksums are calculated to verify the integrity of patch data when downloaded</string>
              </property>
-             <property name="text">
-              <string>SHA-1</string>
+             <property name="whatsThis">
+              <string>Foobar</string>
              </property>
-             <property name="checkable">
-              <bool>false</bool>
+             <property name="title">
+              <string>Hashing algorithm to use</string>
              </property>
+             <layout class="QGridLayout" name="gridLayout_7">
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="radioMD5">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>MD5</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="radioSHA1">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>SHA-1</string>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_5">
+             <property name="title">
+              <string>Deployment</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_15">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="groupBox_6">
+                <property name="toolTip">
+                 <string>Choose how the patch files will be stored and located on your patch server</string>
+                </property>
+                <property name="title">
+                 <string>Patch server repository structure</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_17">
+                 <item row="0" column="0">
+                  <widget class="QRadioButton" name="radioMirror">
+                   <property name="text">
+                    <string>Mirror local repository layout (recommended)</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QRadioButton" name="radioFlat">
+                   <property name="text">
+                    <string>Flat repository</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_21">
+                   <property name="text">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Create the layout of the remote patch repository exactly like the local one, mirroring the directory tree. For example, a local file found at /home/me/app/1.0.0/bin/foo will be found at http://yourhost.com/patch/1.0.0/bin/foo&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                   <property name="indent">
+                    <number>23</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_22">
+                   <property name="text">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Place all the patch files in a single directory, converting all directory delimiters to underscores. For example: a file found at /home/me/app/1.0.0/cfg/foo_bar.txt would be located at http://yourhost.com/patches/1.0.0/cfg_foo_bar.txt&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>true</bool>
+                   </property>
+                   <property name="indent">
+                    <number>23</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_7">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Application root</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_18">
+              <item row="0" column="0">
+               <widget class="QLineEdit" name="txtRoot">
+                <property name="text">
+                 <string>/home/kandie/Workspace/Projects/Kiwi</string>
+                </property>
+                <property name="placeholderText">
+                 <string>/path/to/application</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QToolButton" name="btnChangeRoot">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QPushButton" name="btnUpdateRoot">
+                <property name="text">
+                 <string>&amp;Update</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
@@ -127,6 +223,9 @@ p, li { white-space: pre-wrap; }
        </layout>
       </widget>
       <widget class="QWidget" name="tabEdit">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <attribute name="title">
         <string>&amp;Edit</string>
        </attribute>
@@ -325,104 +424,6 @@ p, li { white-space: pre-wrap; }
            <property name="verticalSpacing">
             <number>6</number>
            </property>
-           <item row="2" column="0" colspan="2">
-            <widget class="QTreeWidget" name="treeRepo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="lineWidth">
-              <number>3</number>
-             </property>
-             <property name="midLineWidth">
-              <number>3</number>
-             </property>
-             <property name="tabKeyNavigation">
-              <bool>false</bool>
-             </property>
-             <property name="showDropIndicator" stdset="0">
-              <bool>false</bool>
-             </property>
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::ExtendedSelection</enum>
-             </property>
-             <property name="textElideMode">
-              <enum>Qt::ElideRight</enum>
-             </property>
-             <property name="indentation">
-              <number>0</number>
-             </property>
-             <property name="rootIsDecorated">
-              <bool>true</bool>
-             </property>
-             <property name="uniformRowHeights">
-              <bool>false</bool>
-             </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
-             </property>
-             <property name="animated">
-              <bool>false</bool>
-             </property>
-             <property name="allColumnsShowFocus">
-              <bool>false</bool>
-             </property>
-             <property name="headerHidden">
-              <bool>false</bool>
-             </property>
-             <attribute name="headerVisible">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="headerCascadingSectionResizes">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="headerDefaultSectionSize">
-              <number>100</number>
-             </attribute>
-             <attribute name="headerHighlightSections">
-              <bool>false</bool>
-             </attribute>
-             <attribute name="headerMinimumSectionSize">
-              <number>30</number>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>Op</string>
-              </property>
-              <property name="font">
-               <font>
-                <weight>50</weight>
-                <bold>false</bold>
-               </font>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Client path</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Server path</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Aux path</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Checksum</string>
-              </property>
-             </column>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_2">
              <property name="text">
@@ -504,6 +505,138 @@ p, li { white-space: pre-wrap; }
              </layout>
             </widget>
            </item>
+           <item row="5" column="0" colspan="2">
+            <widget class="QTreeWidget" name="treeMods">
+             <attribute name="headerDefaultSectionSize">
+              <number>180</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Destination</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Diff File</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Diff Checksum</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
+            <widget class="QTreeWidget" name="treeRenames">
+             <attribute name="headerDefaultSectionSize">
+              <number>180</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Source</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Destination</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Checksum</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="9" column="0" colspan="2">
+            <widget class="QTreeWidget" name="treeDeletions">
+             <attribute name="headerDefaultSectionSize">
+              <number>180</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Source</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QTreeWidget" name="treeCreations">
+             <attribute name="headerDefaultSectionSize">
+              <number>180</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Destination</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Source file</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Checksum</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Created files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="text">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Modified files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Renamed files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Deleted files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="Line" name="line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -539,7 +672,11 @@ p, li { white-space: pre-wrap; }
             <number>0</number>
            </property>
            <item row="1" column="0" colspan="2">
-            <widget class="QTextBrowser" name="txtConsole"/>
+            <widget class="QTextBrowser" name="txtConsole">
+             <property name="autoFormatting">
+              <set>QTextEdit::AutoBulletList</set>
+             </property>
+            </widget>
            </item>
            <item row="0" column="0" colspan="2">
             <widget class="QLabel" name="label_7">
@@ -568,7 +705,7 @@ p, li { white-space: pre-wrap; }
             <number>9</number>
            </property>
            <item row="1" column="0">
-            <widget class="QPushButton" name="btnValidate">
+            <widget class="QPushButton" name="btnGenerateScript">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -576,14 +713,14 @@ p, li { white-space: pre-wrap; }
               </sizepolicy>
              </property>
              <property name="text">
-              <string>&amp;Validate</string>
+              <string>Generate patch script</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QPushButton" name="btnGenerate">
+            <widget class="QPushButton" name="btnGenerateTarball">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -592,7 +729,7 @@ p, li { white-space: pre-wrap; }
               </sizepolicy>
              </property>
              <property name="text">
-              <string>&amp;Generate</string>
+              <string>Generate patch tarball</string>
              </property>
             </widget>
            </item>
@@ -615,6 +752,33 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;(1)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Create an archive that contains all the needed files for the patch repository which you can deploy on your patch server, opposed to manually uploading all files yourself with the correct directory structure&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>Create the patch script for the repository you've made. This will be used by Karazeh to update the client.</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -803,6 +967,9 @@ p, li { white-space: pre-wrap; }
         </item>
         <item row="2" column="0">
          <widget class="QGroupBox" name="groupBox_3">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="title">
            <string>Generate SHA-1 checksum</string>
           </property>
@@ -863,7 +1030,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>701</width>
+     <width>704</width>
      <height>25</height>
     </rect>
    </property>

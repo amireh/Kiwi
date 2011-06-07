@@ -26,7 +26,9 @@
 
 #include "Pixy.h"
 #include <string>
+#include <sstream>
 
+class QTreeWidgetItem;
 namespace Pixy {
 
 typedef enum {
@@ -63,6 +65,41 @@ struct PatchEntry {
     return ( (*this) == (*rhs));
   }
 
+  inline static char charFromOp(const PATCHOP inOp) {
+    char c;
+    switch (inOp) {
+      case CREATE:
+        c = 'C';
+        break;
+      case MODIFY:
+        c = 'M';
+        break;
+      case RENAME:
+        c = 'R';
+        break;
+      case DELETE:
+        c = 'D';
+        break;
+    }
+
+    return c;
+	}
+
+  inline std::string toString() {
+    std::stringstream s;
+    s << charFromOp(Op) << " " << Local;
+    switch (Op) {
+      case CREATE:
+      case MODIFY:
+        s << " " << Remote << " " << Checksum;
+        break;
+      case RENAME:
+        s << " " << Remote;
+        break;
+    }
+    return s.str();
+  }
+
   // see ENUM PATCHOP
   PATCHOP Op;
 
@@ -81,9 +118,6 @@ struct PatchEntry {
    */
   std::string Remote;
 
-  // only used in the case of MODIFY, it represents where the diff patch was downloaded to
-  std::string Temp;
-
   // a handle to the repository this entry belongs to
   Repository* Repo;
 
@@ -93,6 +127,14 @@ struct PatchEntry {
    * and in the case of CREATE, it's of the downloaded file.
    */
   std::string Checksum;
+
+  std::string Fullpath;
+
+  std::string Aux;
+
+  std::string Flat;
+
+  QTreeWidgetItem *Widget;
 };
 
 };

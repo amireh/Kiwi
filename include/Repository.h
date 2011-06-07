@@ -114,6 +114,12 @@ struct Version {
     return stream;
   }
 
+  inline std::string toNumber() {
+    std::stringstream lNumber;
+    lNumber << Major << "." << Minor << "." << Build;
+    return lNumber.str();
+  }
+
   int Major;
   int Minor;
   int Build;
@@ -132,10 +138,10 @@ struct Version {
 class Repository {
 
   public:
-	  Repository(Version inVersion);
+	  Repository(const Version inVersion);
     virtual ~Repository();
 
-    bool
+    PatchEntry*
     registerEntry(PATCHOP op,
                   std::string local,
                   std::string remote = "",
@@ -152,7 +158,10 @@ class Repository {
 		 */
 		std::vector<PatchEntry*> getEntries(PATCHOP op);
 
-		const Version& getVersion();
+    void refreshPaths();
+
+		Version getVersion();
+    void setVersion(const Version inVersion);
 
     void setRoot(std::string inRoot) {
       mRoot = inRoot;
@@ -164,12 +173,15 @@ class Repository {
 
     inline bool isRootSet() { return (mRoot != ""); };
 
+    void setFlat(bool inFlat) { fFlat = inFlat; };
+    inline bool isFlat() { return fFlat; };
+
 	protected:
 	  std::vector<PatchEntry*> mEntries;
-    log4cpp::Category* mLog;
     Version mVersion;
 
     std::string mRoot;
+    bool fFlat;
 
   private:
     // Repositores can not be copied

@@ -8,7 +8,6 @@ SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SO
 
 # dependencies
 FIND_PACKAGE(PkgConfig)
-FIND_PACKAGE(log4cpp REQUIRED)
 FIND_PACKAGE(BZip2 REQUIRED)
 FIND_PACKAGE(Boost COMPONENTS filesystem REQUIRED)
 FIND_PACKAGE(Qt4 REQUIRED)
@@ -28,9 +27,7 @@ ENDIF()
 # add sources
 SET(Kiwi_SRCS
   src/Kiwi.cpp
-  src/Patcher.cpp
   src/Repository.cpp
-  src/PixyLogLayout.cpp
 
   src/bsdiff.c
   src/bspatch.c
@@ -42,7 +39,6 @@ SET(Kiwi_SRCS
 INCLUDE_DIRECTORIES(
   include
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${LOG4CPP_INCLUDE_DIRS}
   ${BOOST_INCLUDE_DIRS}
 )
 
@@ -61,7 +57,7 @@ QT4_WRAP_CPP(Kiwi_SRCS include/Kiwi.h)
 #CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/KiwiConfig.h.cmake ${CMAKE_SOURCE_DIR}/include/KiwiConfig.h )
 
 LINK_DIRECTORIES(${BOOST_LIBRARY_DIRS} ${BZip2_LIBRARY_DIRS})
-LINK_LIBRARIES( boost_filesystem log4cpp bz2)
+LINK_LIBRARIES( boost_filesystem bz2)
 
 ADD_EXECUTABLE(bin/${PROJECT_NAME} ${Kiwi_SRCS} )
 TARGET_LINK_LIBRARIES(bin/${PROJECT_NAME} ${Kiwi_LIBRARIES})

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'Kiwi.h'
 **
-** Created: Mon Jun 6 22:59:26 2011
+** Created: Tue Jun 7 15:37:56 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Pixy__Kiwi[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+      17,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -31,21 +31,39 @@ static const uint qt_meta_data_Pixy__Kiwi[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      12,   11,   11,   11, 0x0a,
-      33,   11,   11,   11, 0x0a,
-      54,   11,   11,   11, 0x0a,
-      71,   11,   11,   11, 0x0a,
-      88,   11,   11,   11, 0x0a,
-     105,   11,   11,   11, 0x0a,
+      18,   12,   11,   11, 0x0a,
+      37,   11,   11,   11, 0x0a,
+      58,   11,   11,   11, 0x0a,
+      79,   11,   11,   11, 0x0a,
+     100,   11,   11,   11, 0x0a,
+     117,   11,   11,   11, 0x0a,
+     134,   11,   11,   11, 0x0a,
+     151,   11,   11,   11, 0x0a,
+     168,   11,   11,   11, 0x0a,
+     195,   11,   11,   11, 0x0a,
+     222,   11,   11,   11, 0x0a,
+     245,   11,   11,   11, 0x0a,
+     260,   11,   11,   11, 0x0a,
+     284,   11,   11,   11, 0x0a,
+     306,   11,   11,   11, 0x0a,
+     331,   11,   11,   11, 0x0a,
+     356,   11,   11,   11, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Pixy__Kiwi[] = {
-    "Pixy::Kiwi\0\0evtShowAboutDialog()\0"
-    "evtClickChangeRoot()\0evtClickCreate()\0"
+    "Pixy::Kiwi\0\0inIdx\0evtTabChanged(int)\0"
+    "evtShowAboutDialog()\0evtClickChangeRoot()\0"
+    "evtClickUpdateRoot()\0evtClickCreate()\0"
     "evtClickModify()\0evtClickRename()\0"
-    "evtClickDelete()\0"
+    "evtClickDelete()\0evtClickFindDiffOriginal()\0"
+    "evtClickFindDiffModified()\0"
+    "evtClickFindDiffDest()\0evtClickDiff()\0"
+    "evtClickFindMD5Source()\0evtClickGenerateMD5()\0"
+    "evtChangeStructure(bool)\0"
+    "evtClickGenerateScript()\0"
+    "evtClickGenerateTarball()\0"
 };
 
 const QMetaObject Pixy::Kiwi::staticMetaObject = {
@@ -77,15 +95,26 @@ int Pixy::Kiwi::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: evtShowAboutDialog(); break;
-        case 1: evtClickChangeRoot(); break;
-        case 2: evtClickCreate(); break;
-        case 3: evtClickModify(); break;
-        case 4: evtClickRename(); break;
-        case 5: evtClickDelete(); break;
+        case 0: evtTabChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: evtShowAboutDialog(); break;
+        case 2: evtClickChangeRoot(); break;
+        case 3: evtClickUpdateRoot(); break;
+        case 4: evtClickCreate(); break;
+        case 5: evtClickModify(); break;
+        case 6: evtClickRename(); break;
+        case 7: evtClickDelete(); break;
+        case 8: evtClickFindDiffOriginal(); break;
+        case 9: evtClickFindDiffModified(); break;
+        case 10: evtClickFindDiffDest(); break;
+        case 11: evtClickDiff(); break;
+        case 12: evtClickFindMD5Source(); break;
+        case 13: evtClickGenerateMD5(); break;
+        case 14: evtChangeStructure((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 15: evtClickGenerateScript(); break;
+        case 16: evtClickGenerateTarball(); break;
         default: ;
         }
-        _id -= 6;
+        _id -= 17;
     }
     return _id;
 }

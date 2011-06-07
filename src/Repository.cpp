@@ -25,17 +25,14 @@
 
 namespace Pixy {
 
-	Repository::Repository(Version inVersion) : mVersion(inVersion) {
+	Repository::Repository(const Version inVersion) : mVersion(inVersion) {
 	  mVersion = inVersion;
-	  mLog = new log4cpp::FixedContextCategory(PIXY_LOG_CATEGORY,"Repository " + mVersion.Value);
-		mLog->infoStream() << "constructed";
-
     mRoot = "";
+    fFlat = false;
+    mEntries.clear();
   }
 
 	Repository::~Repository() {
-
-		mLog->infoStream() << "destroyed";
 
 		PatchEntry* lEntry = 0;
 		while (!mEntries.empty()) {
@@ -45,12 +42,10 @@ namespace Pixy {
 		}
 		lEntry = 0;
 
-		if (mLog)
-		  delete mLog;
 	}
 
 
-  bool
+  PatchEntry*
   Repository::registerEntry(PATCHOP Op,
                             std::string Local,
                             std::string Remote,
@@ -58,18 +53,16 @@ namespace Pixy {
                             std::string Checksum
                             )
   {
-    mLog->debugStream() << "registering entry of type " <<
-      ( (Op == CREATE) ? "CREATE" : (Op == MODIFY) ? "MODIFY" : "DELETE" );
-      //<< " with src: " << Local << " and dest: " << Remote;
-
     PatchEntry *lEntry = new PatchEntry();
 
     lEntry->Op = Op;
     lEntry->Local = Local;
     lEntry->Remote = Remote;
-    lEntry->Temp = Temp;
     lEntry->Checksum = Checksum;
     lEntry->Repo = this;
+
+    if (Op == MODIFY)
+      lEntry->Aux = Remote;
 
     // make sure the entry doesn't exist yet
     std::vector<PatchEntry*>::const_iterator _itr;
@@ -83,13 +76,13 @@ namespace Pixy {
     if (exists) {
       delete lEntry;
       lEntry = 0;
-      return false;
+      return 0;
     }
 
     mEntries.push_back(lEntry);
     lEntry = 0;
 
-    return true;
+    return mEntries.back();
   }
 
   std::vector<PatchEntry*>
@@ -110,7 +103,15 @@ namespace Pixy {
     return mEntries;
   }
 
-  const Version& Repository::getVersion() {
+  Version Repository::getVersion() {
     return mVersion;
+  }
+
+  void Repository::refreshPaths() {
+
+  }
+
+  void Repository::setVersion(const Version inV) {
+    mVersion = inV;
   }
 };

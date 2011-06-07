@@ -1,0 +1,1 @@
+* two incompatible operations with incorrect order, ie: a create before a delete, or a delete after a create
