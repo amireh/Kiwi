@@ -9,6 +9,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Kiwi is a cross-platform tool for creating patch scripts to be used with Karazeh.
 
 Dependencies:
-  1) boost_filesystem
-  2) Qt
-  3) log4cpp
+  1) Qt 4.7
+  2) libbz2

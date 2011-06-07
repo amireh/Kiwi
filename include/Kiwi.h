@@ -97,6 +97,8 @@ namespace Pixy
     void setupWidgets();
     void bindWidgets();
 
+    bool validateEntry(const QString& inPath);
+
     Ui::KiwiUi mUi;
     Ui::KiwiAbout mDlgAboutUi;
 

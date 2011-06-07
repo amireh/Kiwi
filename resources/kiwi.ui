@@ -48,6 +48,12 @@
            </property>
            <item row="4" column="0">
             <widget class="QGroupBox" name="groupBox_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="toolTip">
               <string>Checksums are calculated to verify the integrity of patch data when downloaded</string>
              </property>

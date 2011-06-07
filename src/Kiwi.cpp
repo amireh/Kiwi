@@ -209,7 +209,24 @@ namespace Pixy
     mUi.tabEdit->setEnabled(true);
   }
 
+  bool Kiwi::validateEntry(const QString& inPath) {
+    // if the path doesn't start with mRepo->Root then it's invalid
+    std::cout << "checking " << inPath.toStdString() << " versus " << mRepo->getRoot() << "\n";
+    if (!inPath.contains(QString::fromStdString(mRepo->getRoot()))) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid entry!"),
+        tr("The file you located does not reside within the application root. Please note that all repository files must reside within the application root.")
+      );
+      return false;
+    } else {
+      return true;
+    }
+
+  };
+
   void Kiwi::evtClickCreate() {
+
     QFileDialog dialog(mUi.centralwidget);
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setViewMode(QFileDialog::Detail);
@@ -228,6 +245,9 @@ namespace Pixy
     QString lRoot = QString::fromStdString(mRepo->getRoot());
     PatchEntry* lEntry = 0;
     for (int i=0; i < fileNames.size(); ++i) {
+
+      if (!this->validateEntry(fileNames.at(i)))
+        break;
 
       //lFull = fileNames.at(i);
       lLocal = QString(fileNames.at(i)).remove(lRoot);
@@ -263,9 +283,15 @@ namespace Pixy
     else
       return;
 
+    if (!this->validateEntry(dialog.selectedFiles().at(0)))
+      return;
+
     if (dialog.exec())
       lDiff = QString(dialog.selectedFiles().at(0)).remove(lRoot);
     else
+      return;
+
+    if (!this->validateEntry(dialog.selectedFiles().at(0)))
       return;
 
     MD5 md5;
@@ -298,11 +324,17 @@ namespace Pixy
     else
       return;
 
+    if (!this->validateEntry(dialog.selectedFiles().at(0)))
+      return;
+
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     dialog.setFileMode(QFileDialog::AnyFile);
     if (dialog.exec())
       lDest = QString(dialog.selectedFiles().at(0)).remove(lRoot);
     else
+      return;
+
+    if (!this->validateEntry(dialog.selectedFiles().at(0)))
       return;
 
     PatchEntry *lEntry = mRepo->registerEntry(RENAME, lSrc.toStdString(), lDest.toStdString());
@@ -331,6 +363,10 @@ namespace Pixy
     QString lRoot = QString::fromStdString(mRepo->getRoot());
     PatchEntry *lEntry = 0;
     for (int i=0; i < fileNames.size(); ++i) {
+
+      if (!this->validateEntry(fileNames.at(i)))
+        break;
+
       std::string lFilename = QString(fileNames.at(i)).remove(lRoot).toStdString();
 
       // only add it if it hasn't been added yet
