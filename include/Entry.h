@@ -32,10 +32,10 @@ class QTreeWidgetItem;
 namespace Pixy {
 
 typedef enum {
-  CREATE, //! creates a file locally from a given remote file URL
-  DELETE, //! deletes a file locally
-  MODIFY, //! patches a file locally from a given remote diff URL
-  RENAME
+  P_CREATE, //! creates a file locally from a given remote file URL
+  P_DELETE, //! deletes a file locally
+  P_MODIFY, //! patches a file locally from a given remote diff URL
+  P_RENAME
 } PATCHOP;
 
 class Repository;
@@ -68,16 +68,16 @@ struct PatchEntry {
   inline static char charFromOp(const PATCHOP inOp) {
     char c;
     switch (inOp) {
-      case CREATE:
+      case P_CREATE:
         c = 'C';
         break;
-      case MODIFY:
+      case P_MODIFY:
         c = 'M';
         break;
-      case RENAME:
+      case P_RENAME:
         c = 'R';
         break;
-      case DELETE:
+      case P_DELETE:
         c = 'D';
         break;
     }
@@ -89,11 +89,11 @@ struct PatchEntry {
     std::stringstream s;
     s << charFromOp(Op) << " " << Local;
     switch (Op) {
-      case CREATE:
-      case MODIFY:
+      case P_CREATE:
+      case P_MODIFY:
         s << " " << Remote << " " << Checksum;
         break;
-      case RENAME:
+      case P_RENAME:
         s << " " << Remote;
         break;
     }

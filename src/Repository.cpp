@@ -61,7 +61,7 @@ namespace Pixy {
     lEntry->Checksum = Checksum;
     lEntry->Repo = this;
 
-    if (Op == MODIFY)
+    if (Op == P_MODIFY)
       lEntry->Aux = Remote;
 
     // make sure the entry doesn't exist yet

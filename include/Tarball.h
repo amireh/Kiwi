@@ -18,7 +18,14 @@
 #include <cerrno>
 #include <iostream>
 #include <sstream>
-#include <unistd.h>
+#if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
+  #include <io.h>
+  #include "getlogin.h"
+  #define snprintf _snprintf
+#else
+  #include <unistd.h>
+#endif
+
 
 namespace lindenb { namespace io {
 
@@ -54,12 +61,13 @@ class Tar
 
 	void _init(PosixTarHeader* header)
 	    {
+      
 	    std::memset(header,0,sizeof(PosixTarHeader));
 	    std::sprintf(header->magic,"ustar  ");
 	    std::sprintf(header->mtime,"%011lo",time(NULL));
 	    std::sprintf(header->mode,"%07o",0644);
 	    char * s = ::getlogin();
-	    if(s!=NULL)  std::snprintf(header->uname,32,"%s",s);
+	    if(s!=NULL)  snprintf(header->uname,32,"%s",s);
 	    std::sprintf(header->gname,"%s","users");
 	    }
 
@@ -91,7 +99,7 @@ class Tar
 	    	os << "invalid archive name \"" << filename << "\"";
 	    	throw std::runtime_error(os.str());
 		}
-	    std::snprintf(header->name,100,"%s",filename);
+	    snprintf(header->name,100,"%s",filename);
 	    }
 
 	void _endRecord(std::size_t len)

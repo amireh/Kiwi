@@ -23,8 +23,12 @@
 
 #include "Kiwi.h"
 
-extern "C" int bsdiff(const char* inOld, const char* inNew, const char* inDest);
+extern int bsdiff(const char* inOld, const char* inNew, const char* inDest);
 
+#if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
+  #include <io.h>
+  #define ssize_t SSIZE_T
+#endif
 namespace Pixy
 {
 	Kiwi* Kiwi::__instance = 0;
@@ -122,7 +126,7 @@ namespace Pixy
       lRemote = QString::fromStdString((mRepo->isFlat()) ? inEntry->Flat : inEntry->Remote);
 
     switch (inEntry->Op) {
-      case CREATE:
+      case P_CREATE:
         lItem->setData(0, Qt::DisplayRole, lLocal);
         lItem->setData(1, Qt::DisplayRole, lRemote);
         lItem->setData(2, Qt::DisplayRole, QString(inEntry->Checksum.c_str()));
@@ -130,7 +134,7 @@ namespace Pixy
 
         inEntry->Remote = lRemote.toStdString();
         break;
-      case MODIFY:
+      case P_MODIFY:
         lItem->setData(0, Qt::DisplayRole, lLocal);
         lItem->setData(1, Qt::DisplayRole, lRemote);
         lItem->setData(2, Qt::DisplayRole, QString(inEntry->Checksum.c_str()));
@@ -138,13 +142,13 @@ namespace Pixy
 
         inEntry->Remote = lRemote.toStdString();
         break;
-      case RENAME:
+      case P_RENAME:
         lItem->setData(0, Qt::DisplayRole, lLocal);
         lItem->setData(1, Qt::DisplayRole, lRemote);
         lItem->setData(2, Qt::DisplayRole, QString(inEntry->Checksum.c_str()));
         mUi.treeRenames->addTopLevelItem(lItem);
         break;
-      case DELETE:
+      case P_DELETE:
         lItem->setData(0, Qt::DisplayRole, lLocal);
         mUi.treeDeletions->addTopLevelItem(lItem);
         break;
@@ -247,7 +251,7 @@ namespace Pixy
       std::string lChecksum = md5.digestFile((char*)(fileNames.at(i).toStdString()).c_str());
 
       // only add it if it hasn't been added yet
-      lEntry = mRepo->registerEntry(CREATE, lLocal.toStdString(), lRemote.toStdString(), "", lChecksum);
+      lEntry = mRepo->registerEntry(P_CREATE, lLocal.toStdString(), lRemote.toStdString(), "", lChecksum);
       if (!lEntry)
         continue;
 
@@ -289,7 +293,7 @@ namespace Pixy
     MD5 md5;
     std::string lChecksum = md5.digestFile((char*)((dialog.selectedFiles().at(0).toStdString()).c_str()));
 
-    PatchEntry *lEntry = mRepo->registerEntry(MODIFY, lSrc.toStdString(), lDiff.toStdString(), "", lChecksum);
+    PatchEntry *lEntry = mRepo->registerEntry(P_MODIFY, lSrc.toStdString(), lDiff.toStdString(), "", lChecksum);
     if (!lEntry)
       return;
 
@@ -329,7 +333,7 @@ namespace Pixy
     if (!this->validateEntry(dialog.selectedFiles().at(0)))
       return;
 
-    PatchEntry *lEntry = mRepo->registerEntry(RENAME, lSrc.toStdString(), lDest.toStdString());
+    PatchEntry *lEntry = mRepo->registerEntry(P_RENAME, lSrc.toStdString(), lDest.toStdString());
     if (!lEntry)
       return;
 
@@ -362,7 +366,7 @@ namespace Pixy
       std::string lFilename = QString(fileNames.at(i)).remove(lRoot).toStdString();
 
       // only add it if it hasn't been added yet
-      lEntry = mRepo->registerEntry(DELETE, lFilename);
+      lEntry = mRepo->registerEntry(P_DELETE, lFilename);
       if (!lEntry)
         continue;
 
@@ -503,7 +507,7 @@ namespace Pixy
     std::vector<PatchEntry*>::const_iterator entry;
     QString tmp;
     for (entry = lEntries.begin(); entry != lEntries.end(); ++entry) {
-      if ((*entry)->Op != CREATE && (*entry)->Op != MODIFY)
+      if ((*entry)->Op != P_CREATE && (*entry)->Op != P_MODIFY)
         continue;
 
       if (mRepo->isFlat())
@@ -560,16 +564,16 @@ namespace Pixy
     for (entry = lEntries.begin(); entry != lEntries.end(); ++entry) {
       of << (*entry)->toString() << "\n";
       switch ((*entry)->Op) {
-        case CREATE:
+        case P_CREATE:
           lMsg = "* Registered patch entry of type CREATE";
           break;
-        case MODIFY:
+        case P_MODIFY:
           lMsg = "* Registered patch entry of type MODIFY";
           break;
-        case RENAME:
+        case P_RENAME:
           lMsg = "* Registered patch entry of type RENAME";
           break;
-        case DELETE:
+        case P_DELETE:
           lMsg = "* Registered patch entry of type DELETE";
           break;
       }
@@ -581,15 +585,20 @@ namespace Pixy
   }
 
   void Kiwi::evtClickGenerateTarball() {
+    // not available on windows yet
+#if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
+    QMessageBox::information(mWindow, tr("Sorry!"), tr("This feature is not available yet for Windows."));
+    return;
+#endif
     if (mRepo->getEntries().empty() ) {
       QMessageBox::information(mWindow, tr("Repository is empty"), tr("There are no files to archive!"));
       return;
-    } else if (mRepo->getEntries(CREATE).empty() && mRepo->getEntries(MODIFY).empty()) {
+    } else if (mRepo->getEntries(P_CREATE).empty() && mRepo->getEntries(P_MODIFY).empty()) {
       QMessageBox::information(mWindow, tr("No new files added"), tr("The repository contains no newly created files or modified ones, there's nothing to archive!"));
       return;
     }
 
-    std::string ofp = mRepo->getRoot() + "/patch.tar";
+    std::string ofp = mRepo->getRoot() + "/patch_" + mRepo->getVersion().toNumber() + ".tar";
     mUi.txtConsole->append(tr("Preparing tar archive.") + tr(ofp.c_str()));
     std::fstream out(ofp.c_str(), std::ios::out);
     if(!out.is_open())
@@ -599,7 +608,7 @@ namespace Pixy
     }
 
     lindenb::io::Tar tarball(out);
-    std::vector<PatchEntry*> lEntries = mRepo->getEntries(CREATE);
+    std::vector<PatchEntry*> lEntries = mRepo->getEntries(P_CREATE);
     std::vector<PatchEntry*>::const_iterator entry;
 
     std::string src, dest;
@@ -608,16 +617,16 @@ namespace Pixy
       src = mRepo->getRoot() + (*entry)->Local;
       dest = basepath + ((mRepo->isFlat()) ? (*entry)->Flat : (*entry)->Remote);
 
-      mUi.txtConsole->append(tr("* Adding file to archive: ") + src.c_str());
+      mUi.txtConsole->append(tr("* Adding file to archive: ") + src.c_str() + tr(" : ") + dest.c_str());
       tarball.putFile(src.c_str(), dest.c_str());
     }
 
-    lEntries = mRepo->getEntries(MODIFY);
+    lEntries = mRepo->getEntries(P_MODIFY);
     for (entry = lEntries.begin(); entry != lEntries.end(); ++entry) {
       src = mRepo->getRoot() + (*entry)->Aux;
       dest = basepath + ((mRepo->isFlat()) ? (*entry)->Flat : (*entry)->Remote);
 
-      mUi.txtConsole->append(tr("* Adding file to archive: ") + src.c_str());
+      mUi.txtConsole->append(tr("* Adding file to archive: ") + src.c_str() + tr(" : ") + dest.c_str());
       tarball.putFile(src.c_str(), dest.c_str());
     }
 
@@ -625,8 +634,14 @@ namespace Pixy
     out.close();
 
     mUi.txtConsole->append(tr("Tar archive generated successfully."));
+
     mUi.txtConsole->append(tr("Compressing archive using BZip2..."));
 
+#if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
+  #define open _open
+  #define read _read
+  #define close _close
+#endif
     int tarFD = open(ofp.c_str(), O_RDONLY);
 
     std::string gofp = mRepo->getRoot() + std::string("/patch_") + mRepo->getVersion().toNumber() + std::string(".tar.bz2");
@@ -650,7 +665,13 @@ namespace Pixy
 
     fclose(tbz2File);
 
+#if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
+  #undef open
+  #undef read
+  #undef close
+#endif
     mUi.txtConsole->append(tr("Archive compressed successfully."));
+
   }
 
   void Kiwi::evtClickRemoveC() {
