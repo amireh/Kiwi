@@ -30,6 +30,8 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <exception>
+#include <stdexcept>
 
 namespace Pixy {
 
@@ -82,7 +84,7 @@ class Utility {
 	{
 		std::ostringstream o;
 		if (!(o << x))
-			throw BadConversion(std::string("stringify(")
+			throw std::runtime_error(std::string("stringify(")
 								+ typeid(x).name() + ")");
 		return o.str();
 	}
@@ -95,7 +97,7 @@ class Utility {
 		std::istringstream _buffer(inString);
 		char c;
 		if (!(_buffer >> inValue) || (failIfLeftoverChars && _buffer.get(c)))
-			throw BadConversion(inString);
+			throw std::runtime_error(inString);
 	}
 
 	template<typename T>

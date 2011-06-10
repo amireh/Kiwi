@@ -26,10 +26,6 @@
 
 #include <exception>
 #include <stdint.h>
-#include "PixyExceptions.h"
-
-#define PIXY_APP_VERSION "VERSION 1.0.0" // used in log
-#define PIXY_RESOURCE_PATH "Karazeh.dat"
 
 /* Finds the current platform
  * Note: proudly stolen from Ogre3D code in OgrePlatform.h */
@@ -51,28 +47,6 @@
 #   endif
 #else
 #   define PIXY_PLATFORM PIXY_PLATFORM_LINUX
-#endif
-
-/* Application paths:
- *
- * 1) PROJECT_ROOT: relative path to the root where everything will be found
- * 2) PROJECT_LOG_DIR: path to the directory where the logs will be dumped
- * 3) PROJECT_RESOURCES: where you keep your application-specific data/assets
- * 4) PROJECT_TEMP_DIR: a temp directory used for staging patch files
- *
- */
-#if PIXY_PLATFORM == PIXY_PLATFORM_WIN32
-#define PROJECT_ROOT "..\\"
-#define PROJECT_RESOURCES "\\resources"
-#define PROJECT_TEMP_DIR "..\\tmp\\"
-#elif PIXY_PLATFORM == PIXY_PLATFORM_APPLE
-#define PROJECT_ROOT "../"
-#define PROJECT_RESOURCES "/Resources"
-#define PROJECT_TEMP_DIR "/Resources/tmp/"
-#else
-#define PROJECT_ROOT "../"
-#define PROJECT_RESOURCES "/resources"
-#define PROJECT_TEMP_DIR "../tmp/"
 #endif
 
 #endif

@@ -76,18 +76,23 @@ namespace Pixy
   public slots:
     void evtTabChanged(int inIdx);
     void evtShowAboutDialog();
+
     void evtClickChangeRoot();
     void evtClickUpdateRoot();
+
     void evtClickCreate();
     void evtClickModify();
     void evtClickRename();
     void evtClickDelete();
+
     void evtClickFindDiffOriginal();
     void evtClickFindDiffModified();
     void evtClickFindDiffDest();
     void evtClickDiff();
+
     void evtClickFindMD5Source();
     void evtClickGenerateMD5();
+
     void evtChangeStructure(bool);
 
     void evtClickGenerateScript();
@@ -122,11 +127,6 @@ namespace Pixy
 		Kiwi();
 		Kiwi(const Kiwi&) {}
 		Kiwi& operator=(const Kiwi&);
-
-		void (Kiwi::*goFunc)();
-
-		void goWithRenderer();
-		void goVanilla();
 
 		static Kiwi *__instance;
 

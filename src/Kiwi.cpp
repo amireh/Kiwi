@@ -27,16 +27,15 @@ extern "C" int bsdiff(const char* inOld, const char* inNew, const char* inDest);
 
 namespace Pixy
 {
-	Kiwi* Kiwi::__instance;
-
+	Kiwi* Kiwi::__instance = 0;
 
 	Kiwi::Kiwi() {
+    mRepo = new Repository(Version(0,0,0));
 	}
 
 	Kiwi::~Kiwi() {
-
     delete mRepo;
-
+    mApp = 0;
 	}
 
 	Kiwi* Kiwi::getSingletonPtr() {
@@ -52,8 +51,6 @@ namespace Pixy
 	}
 
 	void Kiwi::go(int argc, char** argv) {
-
-    mRepo = new Repository(Version(0,0,0));
 
     mApp = new QApplication(argc, argv);
     mApp->setOrganizationName("Kiwi");
@@ -123,21 +120,6 @@ namespace Pixy
     lLocal = QString::fromStdString(inEntry->Local);
     if (inEntry->Remote != "")
       lRemote = QString::fromStdString((mRepo->isFlat()) ? inEntry->Flat : inEntry->Remote);
-    //lLocal = lLocal.remove(QString::fromStdString(mRepo->getRoot()));
-
-    /*if (inEntry->Remote != "") {
-      lRemote = QString::fromStdString(inEntry->Remote);
-      //lRemote = lRemote.remove(QString::fromStdString(mRepo->getRoot()));
-      if (mRepo->isFlat() && inEntry->Op != RENAME && inEntry->Op != DELETE) {
-        lRemote = lRemote.replace("/", "_");
-        lRemote = lRemote.replace(0,1,"/"); // leave the first slash
-      }
-    }*/
-
-    // convert to flat naming if chosen
-    /*if (mRepo->isFlat()) {
-      lLocal = lLocal.replace("/", "_");
-    }*/
 
     switch (inEntry->Op) {
       case CREATE:
@@ -211,19 +193,19 @@ namespace Pixy
   }
   void Kiwi::evtClickChangeRoot() {
 
-  QString dir =
-    QFileDialog::getExistingDirectory(
-      mUi.centralwidget,
-      tr("Choose Application Root"),
-      "",
-      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QString dir =
+      QFileDialog::getExistingDirectory(
+        mUi.centralwidget,
+        tr("Choose Application Root"),
+        "",
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-    this->setRoot(dir);
+    if (dir != "")
+      this->setRoot(dir);
   }
 
   bool Kiwi::validateEntry(const QString& inPath) {
     // if the path doesn't start with mRepo->Root then it's invalid
-    std::cout << "checking " << inPath.toStdString() << " versus " << mRepo->getRoot() << "\n";
     if (!inPath.contains(QString::fromStdString(mRepo->getRoot()))) {
       QMessageBox::critical(
         mWindow,
@@ -253,7 +235,6 @@ namespace Pixy
 
     MD5 md5;
     QString lLocal, lRemote;
-    //QString lFull;
     QString lRoot = QString::fromStdString(mRepo->getRoot());
     PatchEntry* lEntry = 0;
     for (int i=0; i < fileNames.size(); ++i) {
@@ -261,7 +242,6 @@ namespace Pixy
       if (!this->validateEntry(fileNames.at(i)))
         break;
 
-      //lFull = fileNames.at(i);
       lLocal = QString(fileNames.at(i)).remove(lRoot);
       lRemote = QString(fileNames.at(i)).remove(lRoot);
       std::string lChecksum = md5.digestFile((char*)(fileNames.at(i).toStdString()).c_str());
@@ -426,6 +406,53 @@ namespace Pixy
   }
 
   void Kiwi::evtClickDiff() {
+
+    // sources must exist
+    if (!QFile::exists(mUi.txtDiffOriginal->text()) ||
+        !QFile::exists(mUi.txtDiffModified->text())) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid sources"),
+        tr("Please make sure that both files you've located exist and are readable.")
+      );
+      return;
+    }
+
+    // destination must not exist
+    if (QFile::exists(mUi.txtDiffDest->text())) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid destination"),
+        tr("The destination file you've specified seems to already exist, will not overwrite.")
+      );
+      return;
+    }
+
+    // try opening the dest file
+    FILE* fd = fopen(mUi.txtDiffDest->text().toStdString().c_str(), "w");
+    if (!fd) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid destination"),
+        tr("Unable to open destination file for writing, the location might be invalid or there's not enough permission to write.")
+      );
+      return;
+    }
+    else {
+      fclose(fd);
+      remove(mUi.txtDiffDest->text().toStdString().c_str());
+    }
+
+    // sources must not be the same
+    if (mUi.txtDiffOriginal->text() == mUi.txtDiffModified->text()) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid sources"),
+        tr("It appears that you've chosen the same file as both the old and new version, can not diff same source.")
+      );
+      return;
+    }
+
     bsdiff(
       (mUi.txtDiffOriginal->text().toStdString()).c_str(),
       (mUi.txtDiffModified->text().toStdString()).c_str(),
@@ -439,6 +466,7 @@ namespace Pixy
   }
 
   void Kiwi::evtClickFindMD5Source() {
+
     QString file =
       QFileDialog::getOpenFileName(
         mUi.centralwidget,
@@ -450,6 +478,15 @@ namespace Pixy
   }
 
   void Kiwi::evtClickGenerateMD5() {
+    if (!QFile::exists(mUi.txtMD5Source->text())) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid file"),
+        tr("Please make sure that the file you've located exists and is readable.")
+      );
+      return;
+    }
+
     MD5 md5;
     std::string lChecksum = md5.digestFile((char*)(mUi.txtMD5Source->text().toStdString()).c_str());
     mUi.txtMD5Result->setText(lChecksum.c_str());

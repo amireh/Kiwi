@@ -32,6 +32,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <exception>
+#include <stdexcept>
 
 class QTreeWidgetItem;
 using std::ostream;
@@ -53,7 +55,7 @@ struct Version {
     std::string tmp = inValue.substr(8, inValue.size());
     std::vector<std::string> elems = Utility::split(tmp, '.');
     if (elems.size() != 3)
-      throw new BadVersion("Invalid version scheme " + inValue);
+      throw std::runtime_error("Invalid version scheme " + inValue);
 
     this->Major = atoi(elems[0].c_str());
     this->Minor = atoi(elems[1].c_str());
