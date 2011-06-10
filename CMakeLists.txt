@@ -14,13 +14,13 @@ SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMake ${CMAKE_SO
 
 IF(WIN32)
   SET( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} C:/Workspace/Build/Qt4.7.3 )
-	SET( CMAKE_LIBRARY_PATH 
-    ${CMAKE_LIBRARY_PATH} 
+	SET( CMAKE_LIBRARY_PATH
+    ${CMAKE_LIBRARY_PATH}
     C:/Workspace/Build/bzip2/Release)
-	SET( CMAKE_INCLUDE_PATH 
-    ${CMAKE_INCLUDE_PATH} 
+	SET( CMAKE_INCLUDE_PATH
+    ${CMAKE_INCLUDE_PATH}
     C:/Workspace/Build/bzip2/include)
-    
+
   ADD_DEFINITIONS("-D_CRT_SECURE_NO_WARNINGS")
 ENDIF()
 
@@ -42,19 +42,17 @@ SET(Kiwi_SRCS
   include/Kiwi.h
   include/md5.hpp
   include/Pixy.h
-  include/PixyExceptions.h
   include/Repository.h
   include/Tarball.h
   include/Utility.h
   include/getlogin.h
-  
+
   src/Kiwi.cpp
   src/Repository.cpp
 
   src/bsdiff.cpp
   src/bspatch.cpp
-  src/getlogin.cpp
-  
+
   src/main.cpp
 )
 
@@ -68,7 +66,6 @@ INCLUDE_DIRECTORIES(
 
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 INCLUDE_DIRECTORIES(${QT_INCLUDE_DIRS})
-
 QT4_WRAP_UI(Kiwi_UI_SRCS
   resources/kiwi.ui
   resources/kiwi_about.ui
@@ -85,8 +82,9 @@ LINK_LIBRARIES(${QT_LIBRARIES} ${BZIP2_LIBRARIES})
 
 SET(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 IF(WIN32)
+  SET(Karazeh_SRCS ${Karazeh_SRCS} src/getlogin.cpp)
   ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${Kiwi_SRCS} ${Kiwi_MOC_SRCS} ${Kiwi_QRC_SRCS} ${Kiwi_UI_SRCS})
 ELSE()
-  ADD_EXECUTABLE(${PROJECT_NAME} ${Kiwi_SRCS} )
+  ADD_EXECUTABLE(${PROJECT_NAME} ${Kiwi_SRCS}  ${Kiwi_MOC_SRCS} ${Kiwi_QRC_SRCS} ${Kiwi_UI_SRCS} )
 ENDIF()
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${Kiwi_LIBRARIES})
