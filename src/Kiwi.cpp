@@ -182,7 +182,17 @@ namespace Pixy
   }
 
   void Kiwi::setRoot(const QString& inRoot) {
-    mRepo->setRoot(inRoot.toStdString());
+    QFileInfo lRoot(inRoot);
+    if (!lRoot.exists() || !lRoot.isDir()) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid directory!"),
+        tr("The directory you located does not seeem to exist!")
+      );
+      return;
+    }
+
+    mRepo->setRoot(lRoot.absoluteFilePath().toStdString());
 
     mUi.txtRoot->setText(inRoot);
     mUi.tabEdit->setEnabled(true);
@@ -209,8 +219,24 @@ namespace Pixy
   }
 
   bool Kiwi::validateEntry(const QString& inPath) {
+    QFileInfo lRoot(QString::fromStdString(mRepo->getRoot()));
+    QFileInfo lDest(inPath);
+
+    std::cout << "Root: " << lRoot.absolutePath().toStdString() << "\n";
+    std::cout << "Dest: " << lDest.absolutePath().toStdString() << "\n";
+
+    if (!lDest.exists()) {
+      QMessageBox::critical(
+        mWindow,
+        tr("Invalid entry!"),
+        tr("The file you located does not seeem to exist!")
+      );
+      return false;
+    }
+
     // if the path doesn't start with mRepo->Root then it's invalid
-    if (!inPath.contains(QString::fromStdString(mRepo->getRoot()))) {
+    bool isChild = lDest.absolutePath().contains(lRoot.absolutePath());
+    if (!isChild) {
       QMessageBox::critical(
         mWindow,
         tr("Invalid entry!"),
